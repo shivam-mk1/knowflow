@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:knowflow/playlist.dart';
 import 'package:knowflow/themeaudio.dart';
 import 'package:knowflow/topicaudio.dart';
 import 'package:knowflow/utils/audioplayer.dart';
@@ -13,6 +14,54 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
+  List images = [
+    "assets/images/fitness.jpg",
+    "assets/images/tech.jpg",
+    "assets/images/space.jpg",
+    "assets/images/history.jpg",
+    "assets/images/ai.jpg",
+    "assets/images/neuro.jpg",
+  ];
+
+  Map<String, List<String>> data = {
+    "Fitness": [
+      "Strength Training Basics",
+      "Nutrition for Muscle Gain",
+      "Home Workouts without Equipment",
+      "Cardio vs Weightlifting: What's Best?",
+    ],
+    "Technology": [
+      "The Rise of 5G Networks",
+      "Blockchain Beyond Bitcoin",
+      "Future of Wearable Tech",
+      "Cloud Computing Explained",
+    ],
+    "Outer Space": [
+      "The James Webb Telescope Discoveries",
+      "Life on Mars: Myth or Reality?",
+      "Black Holes and Wormholes",
+      "The Race for Space Tourism",
+    ],
+    "History": [
+      "Ancient Civilizations: Egypt & Mesopotamia",
+      "World War II: Key Turning Points",
+      "The Renaissance Era Innovations",
+      "Colonialism and Its Global Impact",
+    ],
+    "AI Today": [
+      "ChatGPT and Generative AI",
+      "AI in Healthcare Diagnostics",
+      "Deepfakes and Digital Ethics",
+      "Self-Driving Cars: Progress & Challenges",
+    ],
+    "Neuroscience": [
+      "How Memory Works in the Brain",
+      "The Science of Sleep",
+      "Neuroplasticity: Brain's Adaptability",
+      "Mental Health & Neurochemicals",
+    ],
+  };
+
   late AnimationController _controller;
   late Animation<double> _animation;
 
@@ -44,6 +93,27 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10),
+              child: Center(
+                child: Text(
+                  "KnowFlow",
+                  style: TextStyle(color: Color(0xff0F0817), fontSize: 30),
+                ),
+              ),
+            ),
+          ),
+        ),
         backgroundColor: Color(0xff0F0817),
         body: Padding(
           padding: const EdgeInsets.all(20),
@@ -51,6 +121,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
                     child: Container(
@@ -166,14 +237,63 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin {
                   ),
                 ],
               ),
+              SizedBox(height: h * 0.02),
               Text(
-                "Recommended",
+                "Popular playlists",
                 style: TextStyle(color: Colors.white, fontSize: 30),
+              ),
+              SizedBox(height: h * 0.02),
+              Expanded(
+                child: GridView.builder(
+                  itemCount: images.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 5,
+                  ),
+                  itemBuilder: (context, index) {
+                    return buildItem(index);
+                  },
+                ),
               ),
             ],
           ),
         ),
         bottomNavigationBar: AudioPlayer(),
+      ),
+    );
+  }
+
+  Widget buildItem(int index) {
+    List<String> keys = data.keys.toList();
+    final double h = MediaQuery.of(context).size.height;
+    // final double w = MediaQuery.of(context).size.width;
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          SlideTransitionRoute(
+            page: PlaylistPage(theme: keys[index], add: images[index]),
+          ),
+        );
+      },
+      child: Column(
+        children: [
+          Container(
+            height: h * 0.16,
+
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              border: Border.all(width: 2, color: Colors.white),
+              borderRadius: BorderRadius.circular(10),
+              image: DecorationImage(
+                image: AssetImage(images[index]),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          Text(keys[index], style: TextStyle(color: Colors.white)),
+        ],
       ),
     );
   }

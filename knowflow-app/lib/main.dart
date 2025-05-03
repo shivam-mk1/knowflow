@@ -3,7 +3,8 @@ import 'package:knowflow/home.dart';
 import 'package:knowflow/provider/floatingcardprovider.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
     ChangeNotifierProvider(create: (_) => PlayerProvider(), child: MyApp()),
   );
